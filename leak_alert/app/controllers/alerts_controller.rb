@@ -1,4 +1,6 @@
+
 class AlertsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   before_action :set_alert, only: [:show, :edit, :update, :destroy]
 
   # GET /alerts
@@ -26,6 +28,7 @@ class AlertsController < ApplicationController
   def create
     @alert = Alert.new(alert_params)
 
+    AlertMailer.alert_email(@alert).deliver_now
     respond_to do |format|
       if @alert.save
         format.html { redirect_to @alert, notice: 'Alert was successfully created.' }
